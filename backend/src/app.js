@@ -33,11 +33,13 @@ app.use(limiter)
 
 // CORS: apply headers per-request (reads env at runtime to avoid startup order issues)
 const getAllowedOrigins = () =>
-    (process.env.CORS_ORIGIN || "http://localhost:5173").split(",").map((s) => s.trim())
+    (process.env.CORS_ORIGIN || "http://localhost:5173").split(",").map((s) => s.trim().replace(/\/$/, ""))
 
 app.use((req, res, next) => {
     const allowedOrigins = getAllowedOrigins()
-    const origin = req.headers.origin
+    const origin = req.headers.origin ? req.headers.origin.replace(/\/$/, "") : null
+    console.log('Request origin:', origin)
+    console.log('Allowed origins:', allowedOrigins)
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         res.setHeader("Access-Control-Allow-Origin", origin || allowedOrigins[0])
         res.setHeader("Access-Control-Allow-Credentials", "true")
@@ -50,6 +52,8 @@ app.use((req, res, next) => {
             "Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma, Expires"
         )
         if (req.method === "OPTIONS") return res.sendStatus(204)
+    } else {
+        console.log('Origin not allowed:', origin)
     }
     next()
 })
