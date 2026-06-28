@@ -1,0 +1,14 @@
+services:
+  - type: web_service
+    name: connectsphere-backend
+    env: node
+    region: oregon
+    branch: main
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+    autoDeploy: true
+    pullRequestPreviews: false
+    envVars:
+      - key: NODE_ENV
+        value: production

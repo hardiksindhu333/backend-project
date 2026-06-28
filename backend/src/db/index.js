@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { DB_NAME } from "../constants.js";
 import { Like } from "../models/like.model.js";
 
 // const connectDB = async () => {
@@ -17,8 +16,14 @@ import { Like } from "../models/like.model.js";
 
 const connectDB = async () => {
   try {
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_URL;
+
+    if (!mongoUri) {
+      throw new Error("Missing MongoDB connection string. Set MONGODB_URI or MONGODB_URL in Render.");
+    }
+
     const connectionInstance = await mongoose.connect(
-      `${process.env.MONGODB_URI}`,
+      mongoUri,
       {
         serverSelectionTimeoutMS: 5000, // fail fast if MongoDB isn't reachable
       }

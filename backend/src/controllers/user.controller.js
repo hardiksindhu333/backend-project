@@ -14,6 +14,7 @@ const getCookieOptions = () => {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
+    domain: isProduction ? ".onrender.com" : undefined, // Allow subdomains
   };
 };
 
