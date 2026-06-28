@@ -14,6 +14,10 @@ export const useLogin = () => {
     onSuccess: (data) => {
       console.log("LOGIN SUCCESS", data);
 
+      if (data?.data?.accessToken) {
+        localStorage.setItem("accessToken", data.data.accessToken);
+      }
+
       login(data.data.user); // store user
 
       toast.success("Login successful");

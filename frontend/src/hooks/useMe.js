@@ -7,6 +7,7 @@ export function useMe() {
     queryFn: getCurrentUser,
     staleTime: 60_000,
     retry: false,
+    enabled: Boolean(localStorage.getItem("accessToken")),
   });
 }
 

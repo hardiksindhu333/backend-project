@@ -9,12 +9,16 @@ import crypto from "crypto"
 import bcrypt from "bcrypt"; 
 
 const getCookieOptions = () => {
-  const isProduction = process.env.NODE_ENV === "production";
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    process.env.RENDER === "true" ||
+    process.env.RENDER === "1";
+
   return {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
-    domain: isProduction ? ".onrender.com" : undefined, // Allow subdomains
+    path: "/",
   };
 };
 
@@ -177,11 +181,7 @@ const logoutUser = asyncHandler(async(req,res) =>{
         }
     )
 
-    const options = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    }
+    const options = getCookieOptions();
 
     return res.status(200)
     .clearCookie("accessToken",options)
